@@ -134,7 +134,6 @@ plants_cle3 <- plants_cle3 %>%
   ) %>%
   ungroup()
 
-
 # MO native plants palette
 color_palette <- c("#7da948", "#D5E1BB", "#E2B842", "#672A65", "#413C58")
 color_palette <- c("#5E8746", "#ac8498", "#F9E21F", "#f9f9f4", "#402D0A",
@@ -259,4 +258,7 @@ ggsave(
   dpi = dpi
 )
 
+native_plants <- plants_cle3 %>% 
+  select(-c("ymin", "ymax", "xmin", "xmax"))
 
+save(native_plants, file=paste0(getwd(), "/2025/data/native_plants.RData"))
