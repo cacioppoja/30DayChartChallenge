@@ -22,8 +22,8 @@ library(cowplot)
 
 dpi <- 300
 showtext_opts(dpi = dpi)
-# sysfonts::font_add_google("Merriweather", "Merriweather")
-# sysfonts::font_add_google("Montserrat", "Montserrat")
+sysfonts::font_add_google("Oswald", "Oswald")
+sysfonts::font_add_google("Montserrat", "Montserrat")
 # sysfonts::font_add_google("Waiting for the Sunrise", "wfts")
 showtext::showtext_auto()
 plot_width <- 8
@@ -366,16 +366,54 @@ flowers <-
     ylim = c(0,1.05),
     xlim = c(0,1.05)
   ) +
-  draw_plot(rud, x = -0.2, y = 0.3) +
-  draw_plot(ech, x = 0.1, y = 0) +
-  draw_plot(rat, x = 0.4, y = 0.25) +
-  theme(
-    plot.background = element_rect(fill = purple["green"], color = NA)
+  draw_text(
+    "Taxonomy of Coneflowers",
+    x = 0.015, y = 1, size = 26, hjust = 0,
+    color = purple["green"], fontface = "bold", family = "Oswald") +
+  draw_text(
+    "Flowers commonly known as coneflowers all belong to the Asteraceae family but can be from",
+    x = 0.015, y = 0.94, size = 15, hjust = 0,
+    color = purple["green"], family = "Oswald") +
+  draw_text(
+    "three different genera: Rudbeckia, Echinacea, and Ratibida. Echinacea species are typically",
+    x = 0.015, y = 0.89, size = 15, hjust = 0,
+    color = purple["green"], family = "Oswald") +
+  draw_text(
+    "purple, such as the purple coneflower (e. purpurea). Rudbeckia and Ratibida are shades of yellow.",
+    x = 0.015, y = 0.84, size = 15, hjust = 0,
+    color = purple["green"], family = "Oswald") +
+  draw_text(
+    "The petals on the flowers show Missouri native species for the three genera of coneflowers.",
+    x = 0.015, y = 0.79, size = 15, hjust = 0,
+    color = purple["green"], family = "Oswald") +
+  
+  draw_plot(rud, x = -0.2, y = 0.16) +
+  draw_plot(ech, x = 0.1, y = -0.1) +
+  draw_plot(rat, x = 0.4, y = 0.15) +
+  draw_text(
+    "Sources:",
+    x = 0.015, y = 0.1, size = 8, hjust = 0, vjust = 0,
+    color = "#5a5a5a", family = "sans"
+  ) +
+  draw_text(
+    "Native Plant Database, Grow Native! Missouri Prarie Foundation",
+    x = 0.015, y = 0.075, size = 8, hjust = 0, vjust = 0,
+    color = "#5a5a5a", family = "sans"
+  ) +
+  draw_text(
+    "USDA, NRCS. [2025]. The PLANTS Database",
+    x = 0.015, y = 0.05, size = 8, hjust = 0, vjust = 0,
+    color = "#5a5a5a", family = "sans"
   )
+  
+
+  # theme(
+  #   plot.background = element_rect(fill = "#FFFFFF", color = NA)
+  # )
 
 
 ggsave(
-  filename = "C:/Users/Jessica/Documents/R Projects/30DayChartChallenge/2025/Images/day_13.png",
+  filename = "C:/Users/Jessica/Documents/R Projects/30DayChartChallenge/2025/Images/day_14.png",
   plot = flowers,
   width = plot_width,
   height = plot_height,
