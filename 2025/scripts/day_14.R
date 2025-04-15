@@ -404,12 +404,10 @@ flowers <-
     "USDA, NRCS. [2025]. The PLANTS Database",
     x = 0.015, y = 0.05, size = 8, hjust = 0, vjust = 0,
     color = "#5a5a5a", family = "sans"
+  ) +
+  theme(
+    plot.background = element_rect(fill = "#FFFFFF", color = NA)
   )
-  
-
-  # theme(
-  #   plot.background = element_rect(fill = "#FFFFFF", color = NA)
-  # )
 
 
 ggsave(
