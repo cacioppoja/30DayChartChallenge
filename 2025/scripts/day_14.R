@@ -1,0 +1,385 @@
+#########
+# Program: 30DayChartChallenge,  Day 14 - Kinship
+# Date Created: 04/14/2025
+# Author: Jessi Cacioppo
+# Data Source: https://grownative.org/native-plant-database/,
+#              https://plants.usda.gov/
+########
+
+# Setup
+library(tidyverse)
+library(glue)
+library(camcorder)
+library(showtext)
+# library(ggflowchart)
+library(igraph)
+library(ggforce)
+# library(ggtext)
+# library(ggh4x)
+library(cowplot)
+# library(gghighlight)
+# library(ggfittext)
+
+dpi <- 300
+showtext_opts(dpi = dpi)
+# sysfonts::font_add_google("Merriweather", "Merriweather")
+# sysfonts::font_add_google("Montserrat", "Montserrat")
+# sysfonts::font_add_google("Waiting for the Sunrise", "wfts")
+showtext::showtext_auto()
+plot_width <- 8
+plot_height <- 6
+plot_units <- "in"
+gg_record(
+  device = "png",
+  width = plot_width,
+  height = plot_height,
+  units = plot_units,
+  dpi = dpi
+)
+
+load(file = paste0(getwd(), "/2025/data/native_plants.RData"))
+
+# color_palette <- c(
+#   "#7DA948", "#E2B842", "#CD533B", "#51344D", "#515A47", "#f9f9f4", "#545F66"
+# )
+# names(color_palette) <- c(
+#   "Trees", "Grasses", "Flowers", "Vines", "Shrubs", "White", "Dark"
+# )
+
+coneflower <- native_plants %>% 
+  filter(
+    str_detect(tolower(common_name), "coneflower") |
+    str_detect(tolower(latin_name), "echinacea|rudbeckia|ratibida")
+  )
+  # separate(latin_name, c("Genus", "Species"))
+
+
+names_taxonomy <- c(
+  "Kindom", "Division", "Class", "Order", "Family", "Genus", "Species"
+)
+
+data_taxonomy <- c(
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae - Aster family",
+  "Echinacea - purple coneflower",
+  "Echinacea purpurea - eastern purple coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae - Aster family",
+  "Echinacea  - purple coneflower",
+  "Echinacea pallida  - pale purple coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae  - Aster family",
+  "Rudbeckia  - coneflower",
+  "Rudbeckia laciniata  - cutleaf coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae  - Aster family",
+  "Echinacea - purple coneflower",
+  "Echinacea simulata  - wavyleaf purple coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae - Aster family",
+  "Rudbeckia - coneflower",
+  "Rudbeckia fulgida - orange coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae - Aster family",
+  "Echinacea  - purple coneflower",
+  "Echinacea paradoxa - Bush's purple coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae  - Aster family",
+  "Ratibida - prairie coneflower",
+  "Ratibida pinnata - pinnate prairie coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae - Aster family",
+  "Rudbeckia - coneflower",
+  "Rudbeckia missouriensis - Missouri orange coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae - Aster family",
+  "Rudbeckia - coneflower",
+  "Rudbeckia subtomentosa - sweet coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae - Aster family",
+  "Ratibida - prairie coneflower",
+  "Ratibida columnifera  - upright prairie coneflower",
+  "Plantae - Plants",
+  "Magnoliophyta - Flowering plants",
+  "Magnoliopsida - Dicotyledons",
+  "Asterales",
+  "Asteraceae - Aster family",
+  "Rudbeckia - coneflower",
+  "Rudbeckia hirta  - blackeyed Susan"
+)
+
+taxonomy <- as.data.frame(
+  matrix(data_taxonomy, ncol = 7, byrow = T)
+)
+colnames(taxonomy) <- names_taxonomy
+
+
+taxonomy <- taxonomy %>% 
+  separate_wider_delim(cols = everything(), delim = "-", names_sep = "") %>% 
+  rename_with(~ str_replace(., "2", "_common"), ends_with("2")) %>% 
+  rename_with(~ str_remove(., "1"), ends_with("1")) %>% 
+  mutate(across(names(taxonomy), ~ str_squish(.)))
+  
+coneflower2 <- coneflower %>%
+  inner_join(taxonomy, by = join_by(latin_name == Species), keep = TRUE) %>% 
+  arrange(Genus, Species)
+
+coneflower_taxonomy <- coneflower2 %>% 
+  select(c(names_taxonomy, common_name))
+
+coneflower_genus <- coneflower_taxonomy %>% 
+  select(Genus) %>% 
+  distinct() %>% 
+  unlist()
+
+layout_genus <- function(genus) {
+  outlist <- vector(mode = "list", length(genus))
+  for (g in genus) {
+    
+    flow <- coneflower_taxonomy %>% 
+      filter(Genus == g)
+
+    flow <- data.frame(
+      from = unlist(flow[,1:(length(names_taxonomy)-1)], use.names = FALSE),
+      to = unlist(flow[,2:length(names_taxonomy)], use.names = FALSE)
+    )
+    flow_distinct <- flow %>%
+      distinct()
+
+    flow_distinct <- flow_distinct[6:dim(flow_distinct)[1],]
+    
+    star <- as.data.frame(
+      layout_as_tree(graph_from_data_frame(flow_distinct))
+    )
+    
+    colnames(star) <- c("x", "y")
+    
+    star$label <- flow_distinct %>% unlist() %>% unique()
+    
+    star$shape <- rep("petal", nrow(star))
+    star$shape[1] <- "center"
+    star$text <- paste0(star$shape, "_text")
+    star$ytext <- star$y
+    star$ytext[1] <- -1
+    # star$angle <- star$x*45
+    
+    star2 <- star %>%
+      mutate(
+        angle = case_when(
+          x == 0 & y == 1 ~ 0,
+          x == 0 ~ 90,
+          abs(x) == 1 ~ x*55,
+          abs(x) == 2 ~ x*10,
+          abs(x) == 0.5 ~ x*140,
+          abs(x) == 1.5 ~ x*24
+        ),
+        label = case_when(
+          label == g ~ label,
+          .default = str_extract(label, ".* (.*)", group = TRUE)
+        ) 
+      )
+    
+    # outlist[[g]] <- flow_distinct
+    outlist[[g]] <- star2
+  }
+  return(outlist)
+}
+
+genus_flow <- layout_genus(coneflower_genus)
+
+# Color palette
+
+yellow <- c("#577C3F", "#E4A904","#180F08", "#f9f9f4", "black", "white")
+names(yellow) <- c("green", "petal", "center", "white", "petal_text", "center_text")
+# yellow_text <- c("black", "white")
+# names(yellow) <- c("petal", "center")
+purple <- c("#577C3F", "#D99AC7", "#180F08", "#f9f9f4", "black", "white")
+names(purple) <- c("green", "petal", "center", "white", "petal_text", "center_text")
+
+
+rud <- genus_flow$Rudbeckia %>% 
+  ggplot() +
+  # coord_fixed() +
+  # xlim(c(-5, 5)) +
+  # ylim(c(-5, 5)) +
+  geom_ellipse(
+    data = genus_flow$Rudbeckia %>% filter(shape == "petal"),
+    aes(
+      x0 = x,
+      y0 = y,
+      b = 0.3,
+      a = 0.95,
+      angle = pi/2,
+      color = shape,
+      fill = shape
+    )
+  ) +
+  geom_tile(
+    data = genus_flow$Rudbeckia %>% filter(shape == "center"),
+    aes(
+      x = x,
+      y = ytext,
+      width = 10,
+      height = 0.5,
+      color = shape,
+      fill = shape
+    )
+  ) +
+  geom_text(
+    aes(
+      x = x,
+      y = ytext,
+      label = label,
+      color = text,
+      angle = angle
+    ),
+    fontface = "bold"
+  ) +
+  theme_void() +
+  scale_color_manual(values = yellow) +
+  scale_fill_manual(values = yellow) +
+  guides(fill = "none", color = "none") +
+  coord_polar()
+
+  
+
+ech <- genus_flow$Echinacea %>% 
+  ggplot() +
+  # coord_fixed() +
+  # xlim(c(-5, 5)) +
+  # ylim(c(-5, 5)) +
+  geom_ellipse(
+    data = genus_flow$Echinacea %>% filter(shape == "petal"),
+    aes(
+      x0 = x,
+      y0 = y,
+      b = 0.3,
+      a = 0.95,
+      angle = pi/2,
+      color = shape,
+      fill = shape
+    )
+  ) +
+  geom_tile(
+    data = genus_flow$Echinacea %>% filter(shape == "center"),
+    aes(
+      x = x,
+      y = ytext,
+      width = 10,
+      height = 0.5,
+      color = shape,
+      fill = shape
+    )
+  ) +
+  geom_text(
+    aes(
+      x = x,
+      y = ytext,
+      label = label,
+      color = text,
+      angle = angle
+    ),
+    fontface = "bold"
+  ) +
+  theme_void()  +
+  scale_color_manual(values = purple) +
+  scale_fill_manual(values = purple) +
+  guides(fill = "none", color = "none") +
+  coord_polar()
+
+rat <- genus_flow$Ratibida %>% 
+  ggplot() +
+  # coord_fixed() +
+  # xlim(c(-5, 5)) +
+  # ylim(c(-5, 5)) +
+  geom_ellipse(
+    data = genus_flow$Ratibida %>% filter(shape == "petal"),
+    aes(
+      x0 = x,
+      y0 = y,
+      b = 0.3,
+      a = 0.95,
+      angle = pi/2,
+      color = shape,
+      fill = shape
+    )
+  ) +
+  geom_tile(
+    data = genus_flow$Ratibida %>% filter(shape == "center"),
+    aes(
+      x = x,
+      y = ytext,
+      width = 10,
+      height = 0.5,
+      color = shape,
+      fill = shape
+    )
+  ) +
+  geom_text(
+    aes(
+      x = x,
+      y = ytext,
+      label = label,
+      color = text,
+      angle = angle
+    ),
+    fontface = "bold"
+  ) +
+  theme_void() +
+  scale_color_manual(values = yellow) +
+  scale_fill_manual(values = yellow) +
+  guides(fill = "none", color = "none") +
+  coord_polar()
+
+flowers <- 
+  ggdraw(
+    ylim = c(0,1.05),
+    xlim = c(0,1.05)
+  ) +
+  draw_plot(rud, x = -0.2, y = 0.3) +
+  draw_plot(ech, x = 0.1, y = 0) +
+  draw_plot(rat, x = 0.4, y = 0.25) +
+  theme(
+    plot.background = element_rect(fill = purple["green"], color = NA)
+  )
+
+
+ggsave(
+  filename = "C:/Users/Jessica/Documents/R Projects/30DayChartChallenge/2025/Images/day_13.png",
+  plot = flowers,
+  width = plot_width,
+  height = plot_height,
+  units = plot_units,
+  dpi = dpi
+)
+
