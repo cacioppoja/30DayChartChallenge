@@ -160,7 +160,7 @@ plot2<- plot +
   ) +
   labs(
     title = "Avian Influenza Cases in the United States",
-    subtitle = glue("The map shows the cumulative number per county of bird flu cases detected in wild birds from January 2022 tp April 2025. Counties in white had no detected cases. A total of <b>{scales::comma(nrow(flu2))}</b> cases have been detected."),
+    subtitle = glue("The map shows the cumulative number per county of bird flu cases detected in wild birds from January 2022 to April 2025. Counties in white had no detected cases. A total of <b>{scales::comma(nrow(flu2))}</b> cases have been detected."),
     caption = "Source: USDA Detections of Highly Pathogenic Avian Influenza in Wild Birds"
   )
 
