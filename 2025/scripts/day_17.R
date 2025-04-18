@@ -122,7 +122,7 @@ plot <- counties_flu %>%
   geom_sf(data = states_sf, fill = NA, color = "#404040", size = 0.25) +
   coord_sf(datum = NA) +   
   scale_fill_gradient(
-    name = "Caes", 
+    name = "Cases", 
     # trans = "log",
     low='#C6DBEF',
     high='#053472', 
