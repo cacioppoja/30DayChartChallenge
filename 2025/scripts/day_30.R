@@ -48,6 +48,9 @@ threatened <- data.frame(
     best_pct = scales::percent(best, accuracy = 1, trim = FALSE, suffix = "")
   )
 
+font_add("Font Awesome 6", regular = "Font Awesome 6 Free-Solid-900.otf")
+font_families()
+
 subtitle <- glue(
   "<span style = 'font-size: 13pt'><b>Estimated % threatened vertebrate species in 2025</b></span>",
   "<br><br>",
@@ -158,7 +161,7 @@ plot <- ggplot(data = threatened) +
     plot.background = element_rect(
       fill = light,
       color = highlight,
-      linewidth = 5
+      linewidth = 9
     ),
     plot.margin = margin(1, 1, 1, 1, "cm"),
     panel.background = element_rect(
