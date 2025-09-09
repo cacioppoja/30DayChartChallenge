@@ -33,7 +33,7 @@ gg_record(
 )
 
 # Data input and cleaning
-wbb <- read_delim(file = "C:/USers/Jessica/Documents/R Projects/30DayChartChallenge/2025/data/ncaawbb_viewership.txt")
+wbb <- read_delim(file = "2025/data/ncaawbb_viewership.txt")
 
 wbb_cle <- clean_names(wbb) %>% 
   arrange(year) %>% 
@@ -159,7 +159,7 @@ plot <- wbb_cle %>%
   wbb_theme
 
 ggsave(
-  filename = "C:/USers/Jessica/Documents/R Projects/30DayChartChallenge/2025/Images/day_02.png",
+  filename = "2025/Images/day_02.png",
   plot = plot,
   width = plot_width,
   height = plot_height,
