@@ -205,7 +205,7 @@ plot <- annual_ref_area2 %>%
 plot2 <- ggbackground(plot, ggpomological:::pomological_images("background"))
 
 ggsave(
-  filename = "C:/Users/Jessica/Documents/R Projects/30DayChartChallenge/2025/Images/day_06.png",
+  filename = "2025/Images/day_06.png",
   plot = plot2,
   width = plot_width,
   height = plot_height,
