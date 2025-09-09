@@ -30,7 +30,7 @@ gg_record(
 )
 
 # Data previously extracted and cleaned
-load(paste0(getwd(), "/2025/data/mo_native_plant_cle.RData"))
+load("2025/data/mo_native_plant_cle.RData")
 
 # MO native plants palette
 color_palette <- c("#7da948", "#D5E1BB", "#E2B842", "#672A65", "#413C58")
@@ -92,7 +92,7 @@ histogram <- plant_df_cle %>%
   scale_y_continuous(name = "Frequency")
 
 ggsave(
-  filename = "C:/Users/Jessica/Documents/R Projects/30DayChartChallenge/2025/Images/day_08.png",
+  filename = "2025/Images/day_08.png",
   plot = histogram,
   width = plot_width,
   height = plot_height,
